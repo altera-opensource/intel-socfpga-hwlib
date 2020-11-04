@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="cdt.managedbuild.toolchain.gnu.base.677096465">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.base.677096465" moduleId="org.eclipse.cdt.core.settings" name="Default">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.arm.eclipse.builder.armcc.error" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.base.677096465" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="cdt.managedbuild.toolchain.gnu.base.677096465.660980563" name="/" resourcePath="">
+						<toolChain id="com.arm.toolchain.v6.848193692" name="Arm Compiler 6 (DS-5 built-in)" superClass="com.arm.toolchain.v6">
+							<targetPlatform id="com.arm.toolchain.v6.848193692.715557772" name=""/>
+							<builder id="com.arm.toolchain.v6.builder.223504070" managedBuildOn="false" name="Gnu Make Builder.Default" superClass="com.arm.toolchain.v6.builder"/>
+							<tool id="com.arm.tool.c.compiler.v6.2120131062" name="Arm C Compiler 6" superClass="com.arm.tool.c.compiler.v6"/>
+							<tool id="com.arm.tool.cpp.compiler.v6.342822871" name="Arm C++ Compiler 6" superClass="com.arm.tool.cpp.compiler.v6"/>
+							<tool id="com.arm.tool.assembler.v6.431047741" name="Arm Assembler 6" superClass="com.arm.tool.assembler.v6"/>
+							<tool id="com.arm.tool.c.linker.v6.258212147" name="Arm Linker 6" superClass="com.arm.tool.c.linker.v6"/>
+							<tool id="com.arm.tool.librarian.v6.2109283901" name="Arm Librarian 6" superClass="com.arm.tool.librarian.v6"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="Altera-SoCFPGA-HelloWorld-Baremetal-GNU.null.1327840653" name="Altera-SoCFPGA-HelloWorld-Baremetal-GNU"/>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/Altera-SoCFPGA-HelloWorld-Baremetal-GNU"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.677096465;cdt.managedbuild.toolchain.gnu.base.677096465.660980563;cdt.managedbuild.tool.gnu.c.compiler.base.609031077;cdt.managedbuild.tool.gnu.c.compiler.input.480854066">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>
