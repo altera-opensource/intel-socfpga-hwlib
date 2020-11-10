@@ -1336,7 +1336,7 @@ ALT_STATUS_CODE alt_qspi_init(void)
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
     alt_freq_t qspi_clk_freq = 0;
     ALT_QSPI_BAUD_DIV_t div_bits;
-
+    uint32_t ALT_QSPI_RESET_TMO = 10000;
     /* Validate QSPI module input clocks.
     /  - pclk    - l4_mp_clk
     /  - hclk    - l4_mp_clk
@@ -1373,6 +1373,16 @@ ALT_STATUS_CODE alt_qspi_init(void)
 #elif defined(soc_a10)
     alt_clrbits_word(ALT_RSTMGR_PER0MODRST_ADDR, ALT_RSTMGR_PER0MODRST_QSPI_SET_MSK);
 #endif
+    
+    while (ALT_QSPI_RESET_TMO && !alt_qspi_is_idle())
+    {
+        ALT_QSPI_RESET_TMO--;
+    }
+
+    if (ALT_QSPI_RESET_TMO == 0)
+    {
+        status = ALT_E_TMO;
+    }
 
     /* Configure the remap address register, no remap */
     if (status == ALT_E_SUCCESS) 
@@ -2787,6 +2797,7 @@ static ALT_STATUS_CODE alt_qspi_stig_cmd_helper(uint32_t reg_value, uint32_t tim
 {
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
     bool infinite = (timeout == ALT_QSPI_TIMEOUT_INFINITE);
+    uint32_t ALT_QSPI_STIG_CMD_TMO = 10000;
 
     alt_write_word(ALT_QSPI_FLSHCMD_ADDR, reg_value);
     alt_write_word(ALT_QSPI_FLSHCMD_ADDR, reg_value | ALT_QSPI_FLSHCMD_EXECCMD_E_EXECUTE);
@@ -2801,6 +2812,17 @@ static ALT_STATUS_CODE alt_qspi_stig_cmd_helper(uint32_t reg_value, uint32_t tim
     } while (timeout-- || infinite);
 
     if (timeout == (uint32_t) -1 && !infinite) 
+    {
+        status = ALT_E_TMO;
+    }
+
+
+    while (ALT_QSPI_STIG_CMD_TMO && !alt_qspi_is_idle())
+    {
+        ALT_QSPI_STIG_CMD_TMO--;
+    } 
+
+    if (ALT_QSPI_STIG_CMD_TMO == 0)
     {
         status = ALT_E_TMO;
     }
