@@ -1167,6 +1167,12 @@ ALT_STATUS_CODE alt_cache_l2_init(void)
     /* Query the cache characteristics */
 
     uint32_t auxctrl = alt_read_word(ALT_MPUL2_AUX_CONTROL_ADDR);
+ 
+    /* Read from cache Control Register */
+    uint32_t ctrl = alt_read_word(ALT_MPUL2_CONTROL_ADDR);
+    
+    /* Unset Enable Bit */
+    alt_write_word(ALT_MPUL2_CONTROL_ADDR, ctrl & ~ALT_MPUL2_CONTROL_EN_SET_MSK);
 
     if (auxctrl & ALT_MPUL2_AUX_CONTROL_ASSOCIATIVITY_SET_MSK)
     {
@@ -1201,6 +1207,9 @@ ALT_STATUS_CODE alt_cache_l2_init(void)
     
     /* Clear interrupts just in case. */
     alt_cache_l2_int_status_clear(ALT_CACHE_L2_INTERRUPT_ALL);
+
+    /* Restore Control Register */
+    alt_write_word(ALT_MPUL2_CONTROL_ADDR, ctrl);
 
     return ALT_E_SUCCESS;
 }
