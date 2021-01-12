@@ -29,7 +29,7 @@ You can get more information in the README file inside each of the example.
 
 ## Rocket Board
 - Refer to Rocket Board webpage on how to use and Debug the Baremetal Software using ARM DS IDE
-- https://rocketboards.org/foswiki/Documentation/SoCEDS#Cyclone_V_Bare_Metal_Example_Using_SoC_EDS_Standard_Edition
+- https://rocketboards.org/foswiki/Documentation/HWLib
 - There are examples for the baremetal application inside the examples folder. Each of the example has it's own readme file.
 
 ## API Documentation
