@@ -6,7 +6,8 @@
 3) run install_linaro.sh
 
 Note: 
-For Windows user, please install MSYS Shell and git for windows manually.(http://www.mingw.org/wiki/Getting_Started)
+For Windows user, please install MSYS2 Shell and git for windows manually.(http://www.msys2.org)
+To install required package in MSYS2 shell, run $pacman -S --needed make gcc git
 Please install doxygen/1.8.2 before generating the documentation. (https://www.doxygen.nl/download.html)
 
 ## Software Examples

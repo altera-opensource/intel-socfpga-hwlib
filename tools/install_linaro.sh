@@ -7,7 +7,6 @@ INSTALL_DIR=$PWD
 
 echo "Starting Linaro toolchain installation"
 echo "==="
-echo "Please install SoCEDS command shell in the folder <SOCEDS>/embedded/cygwin_setup"
 echo "If you do not have internet connection, you can download the files from"
 echo "http://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-eabi/gcc-linaro-7.5.0-2019.12-i686_arm-eabi.tar.xz"
 echo "or http://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-eabi/gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi.tar.xz if you're on Windows"
@@ -18,9 +17,9 @@ echo ""
 echo "If you have internet connection and your machine is behind proxy, please run 'export http_proxy=<your_proxy>'"
 echo "and 'export http_proxy=<your_proxy>' before running this script"
 echo ""
-echo "If you're running this script in Windows, please run it from MSYS shell. If you do not have MSYS or MinGW installed"
-echo "you can download it and install it from http://www.mingw.org/wiki/Getting_Started"
-echo "The packages you'll need to install are: mingw-developer-toolkit-bin mingw32-base-bin msys-base-bin msys-wget-bin"
+echo "If you're running this script in Windows, please run it from MSYS2 shell. If you do not have MSYS or MinGW installed"
+echo "you can download it and install it from http://www.msys2.org"
+echo "The packages you'll need to install are: make, gcc and git by running \$pacman -S --needed make gcc git"
 echo "To start a MSYS shell, press the \"Start\" button, and type \"MSYS\", right click, and press \"Open file location\""
 echo "Then right click on the \"MSYS2 MSYS\" and press \"Run as administrator\""
 echo ""
@@ -44,8 +43,17 @@ then
 else
 	wget http://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-eabi/${GCCFILE}.tar.xz -O ${GCCFILE}.tar.xz
 fi
+
 rm -rf $INSTALL_DIR/$GCCFILE
-tar xvf ${GCCFILE}.tar.xz -C $INSTALL_DIR/
+
+if [ -f ${GCCFILE}.tar ]
+then
+	echo Linaro toolchain tarball .tar found, skipping extract xz file
+else
+	xz -k -d ${GCCFILE}.tar.xz
+fi
+
+tar xvf ${GCCFILE}.tar -C $INSTALL_DIR/
 rm -rf gcc
 mv $GCCFILE gcc
 
