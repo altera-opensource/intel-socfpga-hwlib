@@ -44,7 +44,7 @@ By running setup.sh
 ## Supported Feature
 | No | Features                  | Cyclone V / Arria V | Arria10 | Stratix 10 |
 |----|---------------------------|---------------------|---------|------------|
-| 1  | CAN                       |         YES         |   YES   |     YES    |
+| 1  | CAN                       |   Cyclone V Only    |    -    |      -     |
 | 2  | Cache                     |         YES         |   YES   |     YES    |
 | 3  | CCU                       |          -          |    -    |      -     |
 | 4  | Clock Manager             |         YES         |   YES   |     YES    |
@@ -73,10 +73,4 @@ By running setup.sh
 | 27 | UART                      |         YES         |   YES   |     YES    |
 | 28 | USB                       |          -          |    -    |      -     |
 | 29 | Watchdog                  |         YES         |   YES   |     YES    |
-
-## Known Bug list
-- Cache failed to disable properly in Cyclone V family
-- Cache failed to write the control register when loading with uboot 2020
-- Error when performing memory to memory transfer with non-flat memory
-- snprintf from newlib failed to print correctly on specifier with format %-*llu
 
