@@ -440,7 +440,7 @@ uint32_t alt_wdog_counter_get_curtime_millisecs(ALT_WDOG_TIMER_t tmr_id)
                   /* the current time period is not counted, only whole periods are counted */
             if (tmr_id == ALT_WDOG_CPU)
             {
-                bigtime *= (uint64_t) (alt_wdog_core_prescaler_get() + 1);
+                bigtime *= (uint64_t) (alt_wdog_core_prescaler_get()) + 1;
             }
             bigtime *= ALT_MILLISECS_IN_A_SEC;
             bigtime /= freq;          /* cycles-per-second becomes milliseconds-per-cycle */
@@ -527,7 +527,7 @@ uint64_t alt_wdog_counter_get_inittime_nanosecs(ALT_WDOG_TIMER_t tmr_id)
             time += 1;
             if (tmr_id == ALT_WDOG_CPU)
             {
-                time *= (uint64_t) (alt_wdog_core_prescaler_get() + 1);
+                time *= (uint64_t) (alt_wdog_core_prescaler_get()) + 1;
             }
             time *= ALT_NANOSECS_IN_A_SEC;
             time /= freq;              /* cycles-per-second becomes nanoseconds per cycle */
@@ -592,7 +592,7 @@ uint32_t alt_wdog_counter_get_inittime_millisecs(ALT_WDOG_TIMER_t tmr_id)
             bigtime = ((uint64_t) time) + 1;
             if (tmr_id == ALT_WDOG_CPU)         /* the only watchdog with a prescaler */
             {
-                bigtime *= (uint64_t) (alt_wdog_core_prescaler_get() + 1);
+                bigtime *= (uint64_t) (alt_wdog_core_prescaler_get()) + 1;
             }
             bigtime *= ALT_MILLISECS_IN_A_SEC;                         /* scale value */
             bigtime /= freq;              /* cycles-per-second becomes milliseconds per cycle */
