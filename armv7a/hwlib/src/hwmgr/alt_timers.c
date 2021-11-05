@@ -875,7 +875,7 @@ uint32_t alt_gpt_freq_get(ALT_GPT_TIMER_t tmr_id)
     {
         bigfreq = (uint64_t) freq;
         divd = ((((uint64_t) alt_gpt_reset_value_get(tmr_id)) + 1) *
-                    ((uint64_t) (alt_gpt_prescaler_get(tmr_id) + 1)));
+                    ((uint64_t) (alt_gpt_prescaler_get(tmr_id)) + 1));
             /* Convert the reset value to 64-bit before the addition to avoid a potential */
             /* rollover to zero. But add one to the prescaler value before the conversion */
             /* to 64-bit -- no potential for rollover  and integer addition is faster */
@@ -918,7 +918,7 @@ static uint32_t alt_gpt_time_get_kernl(ALT_GPT_TIMER_t tmr_id, uint32_t mult)
     if (alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS)
     {
         bigtime = ((((uint64_t) alt_gpt_reset_value_get(tmr_id)) + 1) *
-                            ((uint64_t) (alt_gpt_prescaler_get(tmr_id) + 1)));
+                            ((uint64_t) (alt_gpt_prescaler_get(tmr_id)) + 1));
                 /* Convert the reset value to 64-bit before the addition to avoid a potential
                  * rollover to zero. But add one to the prescaler value before the conversion
                  * to 64-bit -- no potential for rollover and integer addition is faster */
@@ -993,7 +993,7 @@ static uint32_t alt_gpt_maxtime_get_kernl(ALT_GPT_TIMER_t tmr_id, uint32_t mult)
     if (alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS)
     {
         bigtime = (((uint64_t) alt_gpt_maxcounter_get(tmr_id)) + 1)
-                                * ((uint64_t) (alt_gpt_prescaler_get(tmr_id) + 1));
+                                * ((uint64_t) (alt_gpt_prescaler_get(tmr_id)) + 1);
         bigtime *= (uint64_t) mult;                 /*scale the output */
         bigtime /= (uint64_t) freq;
         time = (bigtime > UINT32_MAX) ? 0xFFFFFFFF : (uint32_t) bigtime;
