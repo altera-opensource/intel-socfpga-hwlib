@@ -145,7 +145,7 @@ ALT_STATUS_CODE strncpy_s (char* destination,
     /*
       * if no error then copy string
       */
-    while (source_size--)
+    while ((source_size--) && (*source != '\0'))
     {
         *destination++ = *source++;
     }
