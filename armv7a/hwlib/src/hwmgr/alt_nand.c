@@ -892,7 +892,7 @@ ALT_STATUS_CODE alt_nand_bad_block_table_get(alt_nand_bad_block_table_t bad_bloc
     uint32_t completion_arg = 0;
     uint32_t total_blocks = (flash->onfi_dev_num_luns * flash->onfi_dev_num_blks_per_lun);
     uint32_t addr = (total_blocks - 1) << (flash->blk_shift + flash->page_shift);  /* highest block is reseved for bad block table  */
-    uint32_t buff[ALT_NAND_PAGE_SIZE];
+    uint32_t buff[ALT_NAND_PAGE_SIZE] = {0};
     uint32_t i;
 
     alt_nand_page_dma_read( addr, 1, buff, sizeof(buff), dma_callback, &completion_arg);
