@@ -454,7 +454,7 @@ static int printarg(ALT_PRINTF_MEM_INFO_t *pinfo, char specifier,char flag,int w
     char ostg[32],pad=' ',leadchar=0,leadchar2=0;
     int count,i,adder=0,isint=1;
     int max;
-    int64_t val;
+    int64_t val = 0;
     char * stgarg = NULL;
      
     if ((specifier=='d') || (specifier=='i') || (specifier=='u') || (specifier=='x') || (specifier=='X') || (specifier=='p')) 
