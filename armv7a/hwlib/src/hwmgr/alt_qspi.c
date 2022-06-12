@@ -100,6 +100,7 @@
 #define ALT_QSPI_SUPPORT_MICRON_128             1
 #define ALT_QSPI_SUPPORT_MICRON_512             1
 #define ALT_QSPI_SUPPORT_MICRON_1024            1
+#define ALT_QSPI_SUPPORT_MICRON_2048            1
 
 #elif  !(ALT_QSPI_SUPPORT_MICRON_M25P40==1)       && \
        !(ALT_QSPI_SUPPORT_MICRON_M25P16==1)       && \
@@ -111,7 +112,8 @@
        !(ALT_QSPI_SUPPORT_MACRONIX_MX66L51235==1) && \
        !(ALT_QSPI_SUPPORT_MICRON_128==1)          && \
        !(ALT_QSPI_SUPPORT_MICRON_512==1)          && \
-       !(ALT_QSPI_SUPPORT_MICRON_1024==1)
+       !(ALT_QSPI_SUPPORT_MICRON_1024==1)         && \
+       !(ALT_QSPI_SUPPORT_MICRON_2048==1)
 
 /* cyclone5 board - N25Q00AA
    arria5   board - N25Q512S
@@ -301,7 +303,9 @@ static ALT_STATUS_CODE alt_qspi_MX25L25635_MX66L51235_enable(void);
 static ALT_STATUS_CODE alt_qspi_N25Q128_enable(void);
 #endif
 
-#if (ALT_QSPI_SUPPORT_MICRON_512==1) || (ALT_QSPI_SUPPORT_MICRON_1024==1)
+#if (ALT_QSPI_SUPPORT_MICRON_512==1) || \
+	(ALT_QSPI_SUPPORT_MICRON_1024==1) || \
+	(ALT_QSPI_SUPPORT_MICRON_2048==1)
 static ALT_STATUS_CODE alt_qspi_N25Q512A_N25Q00AA_enable(void);
 static ALT_STATUS_CODE alt_qspi_N25Q512A_N25Q00AA_wait_write(uint32_t timeout);
 #endif
@@ -899,6 +903,84 @@ static ALT_QSPI_DEV_CONFIG_t qspi_configs[] =
     },
 #endif
 
+#if (ALT_QSPI_SUPPORT_MICRON_2048==1)
+    {
+        ALT_QSPI_STIG_RDID_JEDECID_MICRON, /* .manuf_id */
+        0xBA, /* .mem_type */
+        0x22, /* .mem_cap */
+        0x00, /* .ext_id_mask */
+        0x00, /* .ext_id_val */
+        ALT_QSPI_CFG_SELCLKPHASE_E_ACT, /* .clk_phase */
+        ALT_QSPI_CFG_SELCLKPOL_E_HIGH,   /* .clk_pol */
+        56,   /* .max_freq_mhz */
+        50,   /* .tshsl_ns */
+        0,    /* .tsd2d_ns */
+        10,   /* .tchsh_ns */
+        10,   /* .tslch_ns */
+        256,  /* .page_size */
+        3,    /* .addr_size */
+        ALT_QSPI_MODE_SINGLE, /* .inst_type */
+        ALT_QSPI_STIG_OPCODE_FASTREAD_QUAD_IO, /* .read_op_code */
+        ALT_QSPI_MODE_QUAD, /* .read_addr_xfer_type */
+        ALT_QSPI_MODE_QUAD, /* .read_data_xfer_type */
+        10,   /* .read_dummy_cycles */
+        ALT_QSPI_STIG_OPCODE_PP, /* .write_op_code */
+        ALT_QSPI_MODE_SINGLE, /* .write_addr_xfer_type */
+        ALT_QSPI_MODE_SINGLE, /* .write_data_xfer_type */
+        0,    /* .write_dummy_cycles */
+        2,    /* .erase_count */
+        {4*1024, 64*1024}, /* .erase_sizes */
+        {ALT_QSPI_STIG_OPCODE_SUBSEC_ERASE,
+         ALT_QSPI_STIG_OPCODE_SEC_ERASE}, /* .erase_cmds */
+        1,    /* .erase_sector_idx */
+        false,/* .support_chip_erase */
+        256*1024*1024, /* .device_size */
+        true, /* .micron_multi_die */
+        32*1024*1024, /* .die_size */
+        alt_qspi_N25Q512A_N25Q00AA_enable, /* .init_func */
+        alt_qspi_N25Q512A_N25Q00AA_wait_write, /* .wait_func */
+        "MICRON_2048L"
+    },
+    {
+        ALT_QSPI_STIG_RDID_JEDECID_MICRON, /* .manuf_id */
+        0xBB, /* .mem_type */
+        0x22, /* .mem_cap */
+        0x00, /* .ext_id_mask */
+        0x00, /* .ext_id_val */
+        ALT_QSPI_CFG_SELCLKPHASE_E_ACT, /* .clk_phase */
+        ALT_QSPI_CFG_SELCLKPOL_E_HIGH,   /* .clk_pol */
+        56,   /* .max_freq_mhz */
+        50,   /* .tshsl_ns */
+        0,    /* .tsd2d_ns */
+        10,   /* .tchsh_ns */
+        10,   /* .tslch_ns */
+        256,  /* .page_size */
+        3,    /* .addr_size */
+        ALT_QSPI_MODE_SINGLE, /* .inst_type */
+        ALT_QSPI_STIG_OPCODE_FASTREAD_QUAD_IO, /* .read_op_code */
+        ALT_QSPI_MODE_QUAD, /* .read_addr_xfer_type */
+        ALT_QSPI_MODE_QUAD, /* .read_data_xfer_type */
+        10,   /* .read_dummy_cycles */
+        ALT_QSPI_STIG_OPCODE_PP, /* .write_op_code */
+        ALT_QSPI_MODE_SINGLE, /* .write_addr_xfer_type */
+        ALT_QSPI_MODE_SINGLE, /* .write_data_xfer_type */
+        0,    /* .write_dummy_cycles */
+        2,    /* .erase_count */
+        {4*1024, 64*1024}, /* .erase_sizes */
+        {ALT_QSPI_STIG_OPCODE_SUBSEC_ERASE,
+         ALT_QSPI_STIG_OPCODE_SEC_ERASE}, /* .erase_cmds */
+        1,    /* .erase_sector_idx */
+        false,/* .support_chip_erase */
+        256*1024*1024, /* .device_size */
+        true, /* .micron_multi_die */
+        32*1024*1024, /* .die_size */
+        alt_qspi_N25Q512A_N25Q00AA_enable, /* .init_func */
+        alt_qspi_N25Q512A_N25Q00AA_wait_write, /* .wait_func */
+        "MICRON_2048U"
+    },
+#endif
+
+
 };
 
 #if (ALT_QSPI_SUPPORT_SPANSION_S25FL116K==1)
@@ -1002,8 +1084,10 @@ ALT_STATUS_CODE alt_qspi_S25FL256_S25FL512S_enable(void)
 }
 #endif
 
-#if (ALT_QSPI_SUPPORT_MICRON_512==1) || (ALT_QSPI_SUPPORT_MICRON_1024==1)
-/* Micron commands, for 512 Mib, 1 Gib (64 MiB, 128 MiB) parts. */
+#if (ALT_QSPI_SUPPORT_MICRON_512==1) || \
+	(ALT_QSPI_SUPPORT_MICRON_1024==1) || \
+	(ALT_QSPI_SUPPORT_MICRON_2048)
+/* Micron commands, for 512 Mib, 1 Gib (64 MiB, 128 MiB), 2Gib parts. */
 #define ALT_QSPI_STIG_OPCODE_N25Q512A_RESET_EN             (0x66)
 #define ALT_QSPI_STIG_OPCODE_N25Q512A_RESET_MEM            (0x99)
 #define ALT_QSPI_STIG_OPCODE_N25Q512A_RDFLGSR              (0x70)
