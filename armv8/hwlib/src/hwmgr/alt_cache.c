@@ -41,6 +41,9 @@
 #define dprintf(...)
 #endif
 
+#if !defined(EXECUTION_LEVEL3) && !defined(EXECUTION_LEVEL2)
+    #error "Expecting definition of EXECUTION_LEVEL3 or EXECUTION_LEVEL2"
+#endif
 
 #define ALT_CPU_SCTLR_I_SET_MSK  (1 << 12)
 #define ALT_CPU_SCTLR_C_SET_MSK  (1 <<  2)
@@ -53,7 +56,11 @@ static uint32_t sctlr_get_helper(void)
 #if __arm__
     __asm("MRC p15, 0, %[sctlr], c1, c0, 0" : [sctlr] "=r" (sctlr));
 #elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
     __asm("MRS %[sctlr], sctlr_el3\n" : [sctlr] "=r" (sctlr));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("MRS %[sctlr], sctlr_el2\n" : [sctlr] "=r" (sctlr));
+#endif
 #endif
 
     return sctlr;
@@ -65,7 +72,11 @@ static void sctlr_set_helper(uint32_t sctlr)
 #if __arm__
     __asm("MCR p15, 0, %[val], c1, c0, 0" : : [val] "r" (val));
 #elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
     __asm("MSR sctlr_el3, %[val]\n" : : [val] "r" ((uintptr_t)val));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("MSR sctlr_el2, %[val]\n" : : [val] "r" ((uintptr_t)val));
+#endif
     __asm("ISB\n");
 
 #endif
@@ -169,19 +180,6 @@ ALT_STATUS_CODE alt_cache_cpu_data_enable(void)
     {
         alt_cache_lx_data_invalidate_all();
         sctlr |= ALT_CPU_SCTLR_C_SET_MSK;
-        sctlr_set_helper(sctlr);
-    }
-
-    return ALT_E_SUCCESS;
-}
-
-ALT_STATUS_CODE alt_cache_cpu_data_disable(void)
-{
-    uint32_t sctlr = sctlr_get_helper();
-    if ((sctlr & ALT_CPU_SCTLR_C_SET_MSK) != 0)
-    {
-        alt_cache_lx_data_clean_all();
-        sctlr &= ~ALT_CPU_SCTLR_C_SET_MSK;
         sctlr_set_helper(sctlr);
     }
 
@@ -497,4 +495,25 @@ ALT_STATUS_CODE alt_cache_lx_data_clean_all(void)
 ALT_STATUS_CODE alt_cache_lx_data_purge_all(void)
 {
     return alt_cache_level_purge_all(CLIDR_LOC);
+}
+
+ALT_STATUS_CODE alt_cache_cpu_data_disable(void)
+{
+    uint32_t sctlr = sctlr_get_helper();
+    if ((sctlr & ALT_CPU_SCTLR_C_SET_MSK) != 0)
+    {
+	/* this clean may not be required */
+        alt_cache_lx_data_clean_all();
+        sctlr &= ~ALT_CPU_SCTLR_C_SET_MSK;
+        sctlr_set_helper(sctlr);
+	/* must clean here after marked non-cacheable in sctlr, also we must
+	 * call alt_cache_level_clean_all() directly to avoid stack pointer
+	 * manipulations at this point where we've just forced data to be
+	 * non-cacheable.  Calling the alt_cache_lx_data_clean_all() wrapper
+	 * will fail due to register pushes to the stack.
+	 */
+	alt_cache_level_clean_all(CLIDR_LOC);
+    }
+
+    return ALT_E_SUCCESS;
 }
