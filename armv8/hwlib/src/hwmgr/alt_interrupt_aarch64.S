@@ -50,6 +50,10 @@
     IMPORT(alt_int_handler_irq)
 
     
+#if !defined(EXECUTION_LEVEL3) && !defined(EXECUTION_LEVEL2) && !defined(EXECUTION_LEVEL1)
+    #error "Expecting definition of EXECUTION_LEVEL3 or EXECUTION_LEVEL2 or EXECUTION_LEVEL1"
+#endif
+
 /* Note - ARM execution levels
 *; EL0 - User Space. However, exception SP0 is the special stack
 *; EL1 - Kernel Space
@@ -324,6 +328,12 @@ FUNCTION(alt_int_util_get_current_cpu)
     EXPORT(alt_int_cpu_enable)
 /* void alt_int_cpu_enable(void); */
 FUNCTION(alt_int_cpu_enable)
+#if defined(EXECUTION_LEVEL2)
+    MRS x0, hcr_el2
+    ORR x0, x0, #(1<<27) /* enable external interrupt routing to EL2 */
+    MSR hcr_el2, x0
+    MOV x0, xzr
+#endif
     MSR DAIFClr, #3
 #if defined(SIMICS)
     MRS x0, scr_el3
