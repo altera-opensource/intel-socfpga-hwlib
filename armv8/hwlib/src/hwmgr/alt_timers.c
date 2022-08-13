@@ -66,6 +66,9 @@
 
 #include    "alt_clock_manager.h"                    /* for getting clock bus frequency */
 
+#if !defined(EXECUTION_LEVEL3) && !defined(EXECUTION_LEVEL2)
+    #error "Expecting definition of EXECUTION_LEVEL3 or EXECUTION_LEVEL2"
+#endif
 
 #ifdef soc_s10
     #define ALT_RSTMGR_PERMODRST_ADDR               ALT_RSTMGR_PER1MODRST_ADDR
@@ -156,7 +159,9 @@ ALT_STATUS_CODE alt_gpt_all_tmr_uninit(void)
         /* put the local ARM private timer into reset manually */
     alt_a53_set_gentimer_nsel1control(0);
 
+#if defined(EXECUTION_LEVEL3)
     alt_a53_set_gentimer_sel1control(0);
+#endif
 
     alt_a53_set_gentimer_nsel2control(0);
 
