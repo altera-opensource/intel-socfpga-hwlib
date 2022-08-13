@@ -34,6 +34,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#if !defined(EXECUTION_LEVEL3) && !defined(EXECUTION_LEVEL2)
+    #error "Expecting definition of EXECUTION_LEVEL3 or EXECUTION_LEVEL2"
+#endif
+
 #define ALT_CPU_SCTLR_I_SET_MSK (1 << 12)
 #define ALT_CPU_SCTLR_C_SET_MSK (1 << 2)
 #define ALT_CPU_SCTLR_M_SET_MSK (1 << 0)
@@ -46,7 +50,11 @@ static uint32_t sctlr_get_helper(void)
 #if __arm__
     __asm("MRC p15, 0, %[sctlr], c1, c0, 0" : [sctlr] "=r" (sctlr));
 #elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
     __asm("MRS %[sctlr], sctlr_el3\n" : [sctlr] "=r" (sctlr));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("MRS %[sctlr], sctlr_el2\n" : [sctlr] "=r" (sctlr));
+#endif
 #endif
 
     return sctlr;
@@ -59,7 +67,11 @@ static void sctlr_set_helper(uint32_t sctlr)
 #if __arm__
     __asm("MCR p15, 0, %[val], c1, c0, 0" : : [val] "r" ((uintptr_t)val));
 #elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
     __asm("MSR sctlr_el3, %[val]\n" : : [val] "r" ((uintptr_t)val));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("MSR sctlr_el2, %[val]\n" : : [val] "r" ((uintptr_t)val));
+#endif
     __asm("ISB");
     
 #endif
@@ -87,8 +99,24 @@ ALT_STATUS_CODE alt_mmu_disable(void)
        printf("WARN[MMU]: mmu_disable(): Data cache still active.\n");
     }
     sctlr &= ~ALT_CPU_SCTLR_M_SET_MSK;
-    sctlr_set_helper(sctlr);
 
+#if __arm__
+    sctlr_set_helper(sctlr);
+#elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
+    __asm("DSB ISH\n"
+          "ISB\n"
+          "MSR sctlr_el3, %[sctlr]\n"
+          "ISB\n"
+          : : [sctlr] "r" ((uintptr_t)sctlr));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("DSB ISH\n"
+          "ISB\n"
+          "MSR sctlr_el2, %[sctlr]\n"
+          "ISB\n"
+          : : [sctlr] "r" ((uintptr_t)sctlr));
+#endif
+#endif
     return ALT_E_SUCCESS;
 }
 
@@ -98,7 +126,11 @@ ALT_STATUS_CODE alt_mmu_tlb_invalidate(void)
 #if __arm__
     __asm("MCR p15, 0, r0, c8, c3, 0\n");
 #elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
     __asm("tlbi alle3\n");
+#elif defined(EXECUTION_LEVEL2)
+    __asm("tlbi alle2\n");
+#endif
     __asm("DSB ISH\n");
     __asm("ISB\n");
 #endif
@@ -110,7 +142,11 @@ ALT_STATUS_CODE alt_mmu_tlb_invalidate_is(void)
 #if __arm__
     __asm("MCR p15, 0, r0, c8, c7, 0\n");
 #elif __aarch64__
+#if defined(EXECUTION_LEVEL3)
     __asm("tlbi alle3is\n");
+#elif defined(EXECUTION_LEVEL2)
+    __asm("tlbi alle2is\n");
+#endif
 #endif
     return ALT_E_SUCCESS;
 }
@@ -1056,7 +1092,11 @@ ALT_STATUS_CODE alt_mmu_va_space_enable(const uint64_t * ttb1,
                 ALT_CPU_TCR_IRGN0_SET(1) |
                 ALT_CPU_TCR_T0SZ_SET(ttbconfig->t0sz);
 
+#if defined(EXECUTION_LEVEL3)
     __asm("msr tcr_el3, %[tcr_value]\n" : : [tcr_value] "r" ((uintptr_t)tcr_value));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("msr tcr_el2, %[tcr_value]\n" : : [tcr_value] "r" ((uintptr_t)tcr_value));
+#endif
 
     mair_value = ALT_CPU_MAIR_ATTRx_SET(0, mair_info->mair[0]) |
                  ALT_CPU_MAIR_ATTRx_SET(1, mair_info->mair[1]) |
@@ -1067,9 +1107,15 @@ ALT_STATUS_CODE alt_mmu_va_space_enable(const uint64_t * ttb1,
                  ALT_CPU_MAIR_ATTRx_SET(6, mair_info->mair[6]) |
                  ALT_CPU_MAIR_ATTRx_SET(7, mair_info->mair[7]);
 
+#if defined(EXECUTION_LEVEL3)
     __asm("msr mair_el3, %[mair_value]\n" : : [mair_value] "r" (mair_value));
 
     __asm("msr ttbr0_el3, %[ttbr0_value]\n" : : [ttbr0_value] "r" (*ttb1));
+#elif defined(EXECUTION_LEVEL2)
+    __asm("msr mair_el2, %[mair_value]\n" : : [mair_value] "r" (mair_value));
+
+    __asm("msr ttbr0_el2, %[ttbr0_value]\n" : : [ttbr0_value] "r" (*ttb1));
+#endif
 
 #endif
 
