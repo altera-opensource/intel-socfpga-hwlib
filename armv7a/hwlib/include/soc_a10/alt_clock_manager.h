@@ -34,6 +34,11 @@
 
 #include "hwlib.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 typedef uint32_t alt_freq_t;
 
 /* ------------------------------------------------------------------
@@ -298,4 +303,7 @@ ALT_STATUS_CODE alt_clk_clock_enable(ALT_CLK_t clk);
  */
 ALT_STATUS_CODE alt_clk_is_enabled(ALT_CLK_t clk);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* #ifndef __ALT_CLK_MGR_H__ */

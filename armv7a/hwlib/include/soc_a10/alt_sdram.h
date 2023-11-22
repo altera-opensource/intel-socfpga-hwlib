@@ -45,6 +45,11 @@
 #include "alt_interrupt.h"
 #include "socal/hps.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif  /* __cplusplus */
+
 
 /*****************************************************************************/
 /*! \addtogroup ALT_SDRAM SDRam Controller API
@@ -282,4 +287,7 @@ ALT_STATUS_CODE alt_sdr_firewall_get(ALT_SDR_MEM_TARGET_t target, ALT_SDR_FIREWA
 
 /*! @} */
 
+#ifdef __cplusplus
+}
+#endif
 #endif
