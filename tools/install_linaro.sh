@@ -34,7 +34,7 @@ if [ x$OS == "xWindows_NT" ]
 then
 	GCCFILE=gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-eabi
 else
-	GCCFILE=gcc-linaro-7.5.0-2019.12-i686_arm-eabi
+	GCCFILE=gcc-linaro-7.5.0-2019.12-$(uname -m)_arm-eabi
 fi
 
 if [ -f ${GCCFILE}.tar.xz ]
